@@ -13,13 +13,15 @@ df *= 6300
 
 df = df.applymap(round)
 
+print('-- Daily demand matrix --')
 print(df)
+print('\n\n')
 
-# print(df.loc['1':'2', '3'], df.loc['1':'2', '3'].values.sum())
-# print(df.loc['4':'5', '3'], df.loc['4':'5', '3'].values.sum())
-# print(df.loc['1':'2', '4':'5'], df.loc['1':'2', '4':'5'].values.sum())
-
-for i, zone in enumerate(df.index[:-1]):
-    print(df.iloc[i, i+1:])
-    print(df.loc[zone, zone:].values.sum() - df.loc[zone, zone])
-    print(50*'-')
+print('-- Occupation along route --')
+passengers = 0
+for i, zone in enumerate(df.index):
+    print(zone, end=' ')
+    if zone == df.index[-1]:
+        break
+    passengers += df.loc[zone, zone:].values.sum() - df.loc[zone, :zone].values.sum()
+    print('---{}--→'.format(passengers), end=' ')
