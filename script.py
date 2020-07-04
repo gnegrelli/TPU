@@ -37,14 +37,14 @@ g.add_edges([(i, j) for i in range(len(df)) for j in range(i+1, len(df))])
 
 # Get demand on edges and normalize it
 edge_weights = np.array([df.iloc[e.tuple[0], e.tuple[1]] for e in g.es])
-edge_weights = 20*edge_weights/np.max(edge_weights)
+edge_weights = 10*edge_weights/np.max(edge_weights)
 
 
 g.vs['name'] = df.index
 g.vs['label'] = g.vs['name']
 g.vs['color'] = 'green'
 
-layout = [(1, 1), (2, 1), (1.5, 2), (3, 1.5), (2.5, 0), (.5, 0), (0, 1.5), (3, 2.5)]
+layout = [(1.25, 2.25), (2.25, 2.25), (1.75, 1), (3, 2), (2.5, 4), (1, 4), (0.5, 2), (3.25, 0)]
 
 g.es['width'] = edge_weights
 
