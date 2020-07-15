@@ -44,16 +44,27 @@ def daily_demand(path, peak='morning', passengers=None, verbose=False):
 
     return df
 
-# print('-- Occupation along route --')
-# passengers = 0
-# for i, zone in enumerate(df.index):
-#     print(zone, end=' ')
-#     if zone == df.index[-1]:
-#         break
-#     passengers += df.loc[zone, zone:].values.sum() - df.loc[zone, :zone].values.sum()
-#     print('---{}--→'.format(passengers), end=' ')
-# print('\n\n')
-#
+
+def occupation(dem, route=None):
+    assert isinstance(dem, pd.DataFrame), 'Daily demand must be provided in a pandas DataFrame'
+
+    if route is not None:
+        assert isinstance(route, list), 'Route must be given in a list format'
+        assert set(route).issubset(set(dem.index)), 'Route must contain only stops listed in demand matrix'
+    else:
+        route = list(dem.index)
+
+    print('-- Occupation along route --')
+    passengers = 0
+    for zone in route:
+        print(zone, end=' ')
+        if zone == route[-1]:
+            break
+        zone_id = route.index(zone)
+        passengers += dem.loc[zone, route[zone_id:]].values.sum() - dem.loc[zone, route[:zone_id + 1]].values.sum()
+        print('---{}--→'.format(passengers), end=' ')
+    print('\n\n')
+
 # # Create graph and add its vertices and edges
 # g = Graph()
 # g.add_vertices(len(df))
@@ -76,4 +87,5 @@ def daily_demand(path, peak='morning', passengers=None, verbose=False):
 
 
 if __name__ == '__main__':
-    print(daily_demand('OD.csv', passengers=6300))
+    dem = daily_demand('matriz_OD.csv', passengers=6300, verbose=True)
+    occupation(dem, route=['1', '3', '5'])
