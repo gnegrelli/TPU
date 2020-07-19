@@ -16,8 +16,17 @@ def daily_demand(path, peak='morning', passengers=None, verbose=False):
     if passengers is not None:
         assert isinstance(passengers, int) and passengers > 0, 'Number of daily passengers must be a positive integer'
 
-    # Read Origin-Destiny matrix from file and treat missing data
+    # Read Origin-Destiny matrix from file
     df = pd.read_csv(path)
+
+    # Extract coordinates of each stop from dataframe
+    if 'coordinates' in df.columns:
+        coord = df.coordinates.apply(eval).to_list()
+        df.drop(columns=['coordinates'], inplace=True)
+    else:
+        coord = None
+
+    #  Treat missing data and data type
     df.fillna(0, inplace=True)
     df = df.astype(int)
 
@@ -42,7 +51,7 @@ def daily_demand(path, peak='morning', passengers=None, verbose=False):
         print(df)
         print('\n')
 
-    return df
+    return df, coord
 
 
 def occupation(dem, route=None):
@@ -94,5 +103,6 @@ def graph(dem, coord=None, linewidth=10):
 
 
 if __name__ == '__main__':
-    dem = daily_demand('matriz_OD.csv', passengers=6300, verbose=True)
+    dem, coord = daily_demand('matriz_OD.csv', passengers=6300, verbose=True)
     occupation(dem, route=['1', '3', '5'])
+    graph(dem, coord)
