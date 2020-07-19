@@ -65,25 +65,32 @@ def occupation(dem, route=None):
         print('---{}--→'.format(passengers), end=' ')
     print('\n\n')
 
-# # Create graph and add its vertices and edges
-# g = Graph()
-# g.add_vertices(len(df))
-# g.add_edges([(i, j) for i in range(len(df)) for j in range(i+1, len(df))])
-#
-# # Get demand on edges and normalize it
-# edge_weights = np.array([df.iloc[e.tuple[0], e.tuple[1]] for e in g.es])
-# edge_weights = 10*edge_weights/np.max(edge_weights)
-#
-#
-# g.vs['name'] = df.index
-# g.vs['label'] = g.vs['name']
-# g.vs['color'] = 'green'
-#
-# layout = [(1.25, 2.25), (2.25, 2.25), (1.75, 1), (3, 2), (2.5, 4), (1, 4), (0.5, 2), (3.25, 0)]
-#
-# g.es['width'] = edge_weights
-#
-# plot(g, layout=layout)
+
+def graph(dem, coord=None, linewidth=10):
+    assert isinstance(dem, pd.DataFrame), 'Daily demand must be provided in a pandas DataFrame'
+
+    if coord is not None:
+        assert isinstance(coord, list), ''
+        assert len(coord) == len(dem.index), ''
+
+    assert isinstance(linewidth, (float, int)) and linewidth > 0, 'Linewidth must be a positive number'
+
+    # Create graph and add its vertices and edges
+    g = Graph()
+    g.add_vertices(len(dem))
+    g.add_edges([(i, j) for i in range(len(dem)) for j in range(i+1, len(dem))])
+
+    # Get demand on edges and normalize it
+    edge_weights = np.array([dem.iloc[e.tuple[0], e.tuple[1]] for e in g.es])
+    edge_weights = linewidth*edge_weights/np.max(edge_weights)
+
+    g.vs['name'] = dem.index
+    g.vs['label'] = g.vs['name']
+    g.vs['color'] = 'green'
+
+    g.es['width'] = edge_weights
+
+    plot(g, layout=coord)
 
 
 if __name__ == '__main__':
