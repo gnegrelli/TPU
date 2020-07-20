@@ -24,3 +24,7 @@ This script contains the methods implemented in order to solve the exercises pro
 * _daily_demand_: This method estimates the daily demand on each route of a transport system based on its peak demand and daily number of passengers.
 * _occupation_: This method estimates the daily occupation on a given route.
 * _graph_: This method constructs a graph representing the travelling demands on the entire system.
+
+## od_matrices
+
+This folder contains the csv files with the OD matrices for two different systems during their peak hours. One of the csv files also contains a coordinates column that will be used to construct the system graph.  
